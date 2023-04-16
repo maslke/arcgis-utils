@@ -1,13 +1,13 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
-import json
-import create_user
-import os
+from handlers import convert_mxd_version, create_user_handler
 import functools
 
 """
     HELP CONTENTS
 """
+
+
 def get_help():
     return """
         #########################
@@ -45,7 +45,7 @@ def get_help():
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    def __init__(self, request, client_address, server, authorization_file = None):
+    def __init__(self, request, client_address, server, authorization_file=None):
         self.authorization_file = authorization_file
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
@@ -61,30 +61,17 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write("no handler for request path:{}".format(request_path))
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
         parsed_data = urlparse.urlparse(self.path)
         request_path = parsed_data.path
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        if post_data is None:
-            message = 'request parameter is empty'
-            print message
-            self.wfile.write(message)
-            exit()
-        try:
-            request_data = json.loads(post_data)
-        except ValueError:
-            message = 'invalid json format:{}, exit'.format(post_data)
-            print message
-            self.wfile.write(message)
-            exit()
+
         if request_path == '/create_user':
-            request_data['authorization_file'] = self.authorization_file
-            messages = create_user.create(request_data)
-            self.wfile.write(os.linesep.join(messages))
+            create_user_handler.handle(self)
+        elif request_path == '/mapping/convert-mxd-version':
+            convert_mxd_version.handle(self)
         else:
+            self.send_response(404)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
             self.wfile.write("no handler for request path:{}".format(request_path))
 
 
@@ -94,3 +81,8 @@ def run(authorization_file, server_class=HTTPServer, handler_class=SimpleHTTPReq
     httpd = server_class(server_address, handler_partial)
     print 'Starting httpd on port {}'.format(port)
     httpd.serve_forever()
+
+
+if __name__ == '__main__':
+    run(authorization_file='')
+

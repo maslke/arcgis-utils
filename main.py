@@ -1,5 +1,5 @@
 import argparse
-import simple_server
+from web_server import simple_server
 
 
 def main():

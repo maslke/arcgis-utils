@@ -31,7 +31,6 @@ def create_postgresql_user(instance_name,
         pass
 
 
-
 """
     CREATE ORACLE USER
 """
@@ -61,10 +60,12 @@ def create_oracle_user(instance_name,
     except arcpy.ExecuteError:
         pass
 
+
 """
     CREATE ARCGIS ENTERPRISME GEODATABASE USER
     SUPPORTS ORACLE AND POSTGRESQL ONLY, SQL SERVER IS NOT SUPPORTED
 """
+
 
 def create(params):
     database_platform = params.get('database_platform')
