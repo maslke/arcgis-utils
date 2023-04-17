@@ -2,6 +2,7 @@ import json
 import os
 from arcgis import create_user
 
+
 def handle(request):
     content_length = int(request.headers['Content-Length'])
     post_data = request.rfile.read(content_length)
