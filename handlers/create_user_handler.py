@@ -1,6 +1,6 @@
 import json
 import os
-from arcgis import create_user
+from ags import create_user
 
 
 def handle(request):
