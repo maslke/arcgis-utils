@@ -14,4 +14,5 @@ def save_as(input_mxd_name, extension='.mxd', version='10.3'):
     except arcpy.ExecuteError:
         print 'fail to convert mxd version'
         return None
+    os.remove(input_mxd)
     return output_mxd

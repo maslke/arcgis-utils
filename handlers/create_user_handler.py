@@ -2,6 +2,10 @@ import json
 import os
 from ags import create_user
 
+"""
+    Create Enterprise GeoDatabase
+"""
+
 
 def handle(request):
     content_length = int(request.headers['Content-Length'])

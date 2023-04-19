@@ -14,7 +14,7 @@ def get_help():
         end-point: /help
         method: 'GET'
         #########################
-        end-point: /create_user
+        end-point: /management/create_user
         for: Create Enterprise Geodatabase
         method: 'POST'
         how to use:
@@ -30,7 +30,7 @@ def get_help():
                         "gdb_admin_name":"",
                         "gdb_admin_password":""}
             2. Oracle
-            curl --location 'http://localhost:10000/create_user' \
+            curl --location 'http://localhost:10000/management/create_user' \
                     --header 'Content-Type: text/plain' \
                         --data '{
                         "database_platform":"Oracle",
@@ -39,6 +39,15 @@ def get_help():
                         "database_admin_password":"",
                         "gdb_admin_name":"",
                         "gdb_admin_password":""}
+        #########################
+        end-point: /mapping/convert_mxd_version
+        for: Change mxd version to a lower one
+        method: 'POST'
+        how to use:
+            Content-Type: multipart/form-data
+            body: form-data
+            key1: file(upload the mxd file)
+            key2: version(if none,default is 10.3)
         #########################
     """
 
@@ -64,7 +73,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         parsed_data = urlparse.urlparse(self.path)
         request_path = parsed_data.path
 
-        if request_path == '/create_user':
+        if request_path == 'management/create_user':
             create_user_handler.handle(self)
         elif request_path == '/mapping/convert-mxd-version':
             convert_mxd_version.handle(self)
